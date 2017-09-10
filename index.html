@@ -7,26 +7,34 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Randomness</title>
     <style>
-        .container{
+        .container {
             display: flex;
             width: 100%;
         }
-        .charts{
+
+        .container > button {
+            margin: auto;
+        }
+
+        .charts {
             width: 70%;
             margin: auto;
             display: flex;
             flex-direction: column;
         }
-        .charts > canvas {
+
+        .charts>canvas {
             width: 90%;
             height: 200px;
             margin: auto;
         }
-        .fly> canvas {
+
+        .fly>canvas {
             width: 100%;
             height: 100%;
         }
-        .fly{
+
+        .fly {
             width: 25%;
             margin: auto;
         }
@@ -34,6 +42,9 @@
 </head>
 
 <body>
+    <div class="container"> 
+        <button id="d0regen">Regenerate</button>
+    </div>
     <div class="container">
         <div class="charts">
             <canvas id="d0x" height="300" width="900"></canvas>
@@ -41,6 +52,36 @@
         </div>
         <div class="fly">
             <canvas id="d0f" width="200" height="200"></canvas>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="charts">
+            <canvas id="d1x" height="300" width="900"></canvas>
+            <canvas id="d1y" height="300" width="900"></canvas>
+        </div>
+        <div class="fly">
+            <canvas id="d1f" width="200" height="200"></canvas>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="charts">
+            <canvas id="d2x" height="300" width="900"></canvas>
+            <canvas id="d2y" height="300" width="900"></canvas>
+        </div>
+        <div class="fly">
+            <canvas id="d2f" width="200" height="200"></canvas>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="charts">
+            <canvas id="d3x" height="300" width="900"></canvas>
+            <canvas id="d3y" height="300" width="900"></canvas>
+        </div>
+        <div class="fly">
+            <canvas id="d3f" width="200" height="200"></canvas>
         </div>
     </div>
 
