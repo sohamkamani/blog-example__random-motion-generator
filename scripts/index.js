@@ -3,6 +3,7 @@ import * as d3 from 'd3'
 import { genRandomLinesDegree } from './gen-lines'
 import CanvasLineChart from './display-lines'
 import Fly from './display-fly'
+import Dashboard from './dashboard'
 
 const randomLinesX = genRandomLinesDegree({
   degree: 4,
@@ -36,9 +37,16 @@ const startFly = (dataX, dataY, canvasId) => {
   return fly
 }
 
-const fly0 = startFly(randomLinesX[0], randomLinesY[0], 'd0f')
-const cl0x = new CanvasLineChart('d0x', randomLinesX[0])
-const cl0y = new CanvasLineChart('d0y', randomLinesY[0])
+// const fly0 = startFly(randomLinesX[0], randomLinesY[0], 'd0f')
+// const cl0x = new CanvasLineChart('d0x', randomLinesX[0])
+// const cl0y = new CanvasLineChart('d0y', randomLinesY[0])
+
+const d0 = new Dashboard({
+  chartXId: 'd0x',
+  chartYId: 'd0y',
+  flyId: 'd0f',
+  degree: 0
+})
 
 const fly1 = startFly(randomLinesX[1], randomLinesY[1], 'd1f')
 const cl1x = new CanvasLineChart('d1x', randomLinesX[1])
@@ -62,15 +70,13 @@ const animate = (fly, chartX, chartY) =>
     }
   })
 
-animate(fly0, cl0x, cl0y)
+// animate(fly0, cl0x, cl0y)
+d0.animate()
 animate(fly1, cl1x, cl1y)
 animate(fly2, cl2x, cl2y)
 animate(fly3, cl3x, cl3y)
 
 const regen = document.getElementById('d0regen')
 regen.addEventListener('click', () => {
-  fly0.position = 0
-  cl0x.position = 0
-  cl0y.position = 0
-  animate(fly0, cl0x, cl0y)
+  d0.generate()
 })

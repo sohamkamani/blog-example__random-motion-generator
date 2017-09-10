@@ -3,6 +3,8 @@ import * as d3 from 'd3'
 function CanvasLineChart(canvasId, data) {
   var canvas = document.getElementById(canvasId)
   const context = canvas.getContext('2d')
+  context.restore()
+  context.beginPath()
 
   const margin = {
     top: 20,
@@ -32,6 +34,7 @@ function CanvasLineChart(canvasId, data) {
     .curve(d3.curveCatmullRom)
     .context(context)
 
+  context.save()
   context.translate(margin.left, margin.top)
 
   this.context = context

@@ -5441,6 +5441,8 @@ const integralOf = (line, init) => {
 function CanvasLineChart(canvasId, data) {
   var canvas = document.getElementById(canvasId);
   const context = canvas.getContext('2d');
+  context.restore();
+  context.beginPath();
 
   const margin = {
     top: 20,
@@ -5467,6 +5469,7 @@ function CanvasLineChart(canvasId, data) {
     .curve(catmullRom)
     .context(context);
 
+  context.save();
   context.translate(margin.left, margin.top);
 
   this.context = context;
@@ -5552,6 +5555,72 @@ Fly.prototype.animate = function(){
   });
 };
 
+const Dashboard = function({
+  chartXId,
+  chartYId,
+  flyId,
+  regenButtonId,
+  degree
+}) {
+  const generate = () => {
+    const randomLinesX = genRandomLinesDegree({
+      degree,
+      nPoints: 500,
+      max: 5,
+      min: -5
+    });
+    const randomLinesY = genRandomLinesDegree({
+      degree,
+      nPoints: 500,
+      max: 5,
+      min: -5
+    });
+
+    const dataX = randomLinesX[randomLinesX.length - 1];
+    const dataY = randomLinesY[randomLinesY.length - 1];
+
+    var flyX = linear$2()
+      .range([0, 200])
+      .domain(extent(dataX, d => d * 1.5));
+
+    var flyY = linear$2()
+      .range([0, 200])
+      .domain(extent(dataY, d => d * 1.5));
+
+    const flyPath = dataX.map((d, i) => ({
+      x: flyX(d),
+      y: flyY(dataY[i])
+    }));
+    const fly = new Fly(flyPath, flyId);
+
+    const chartX = new CanvasLineChart(chartXId, dataX);
+    const chartY = new CanvasLineChart(chartYId, dataY);
+
+    fly.draw();
+    chartX.draw();
+    chartY.draw();
+
+    return { fly, chartX, chartY }
+  };
+
+  let { fly, chartX, chartY } = generate();
+
+  const animate = () =>
+    requestAnimationFrame(() => {
+      if (fly.next() && chartX.next() && chartY.next()) {
+        fly.draw();
+        chartX.draw();
+        chartY.draw();
+        animate(fly, chartX, chartY);
+      }
+    });
+
+  return {
+    animate,
+    generate
+  }
+};
+
 const randomLinesX = genRandomLinesDegree({
   degree: 4,
   nPoints: 500,
@@ -5582,9 +5651,16 @@ const startFly = (dataX, dataY, canvasId) => {
   return fly
 };
 
-const fly0 = startFly(randomLinesX[0], randomLinesY[0], 'd0f');
-const cl0x = new CanvasLineChart('d0x', randomLinesX[0]);
-const cl0y = new CanvasLineChart('d0y', randomLinesY[0]);
+// const fly0 = startFly(randomLinesX[0], randomLinesY[0], 'd0f')
+// const cl0x = new CanvasLineChart('d0x', randomLinesX[0])
+// const cl0y = new CanvasLineChart('d0y', randomLinesY[0])
+
+const d0 = new Dashboard({
+  chartXId: 'd0x',
+  chartYId: 'd0y',
+  flyId: 'd0f',
+  degree: 0
+});
 
 const fly1 = startFly(randomLinesX[1], randomLinesY[1], 'd1f');
 const cl1x = new CanvasLineChart('d1x', randomLinesX[1]);
@@ -5608,17 +5684,15 @@ const animate = (fly, chartX, chartY) =>
     }
   });
 
-animate(fly0, cl0x, cl0y);
+// animate(fly0, cl0x, cl0y)
+d0.animate();
 animate(fly1, cl1x, cl1y);
 animate(fly2, cl2x, cl2y);
 animate(fly3, cl3x, cl3y);
 
 const regen = document.getElementById('d0regen');
 regen.addEventListener('click', () => {
-  fly0.position = 0;
-  cl0x.position = 0;
-  cl0y.position = 0;
-  animate(fly0, cl0x, cl0y);
+  d0.generate();
 });
 
 }());
