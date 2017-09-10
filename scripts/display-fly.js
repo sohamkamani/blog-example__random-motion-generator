@@ -32,3 +32,5 @@ Fly.prototype.animate = function(){
     this.animate()
   })
 }
+
+export default Fly

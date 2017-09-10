@@ -1,4 +1,6 @@
-function displayCanvas(canvasId, data) {
+import * as d3 from 'd3'
+
+function displayCanvas (canvasId, data) {
   var canvas = document.getElementById(canvasId)
   const context = canvas.getContext('2d')
 
@@ -21,7 +23,7 @@ function displayCanvas(canvasId, data) {
     .range([height, 0])
     .domain(d3.extent(data, d => d * 1.3))
 
-  var line = d3
+  var chartLine = d3
     .line()
     .x((_, i) => {
       return x(i)
@@ -33,8 +35,10 @@ function displayCanvas(canvasId, data) {
   context.translate(margin.left, margin.top)
 
   context.beginPath()
-  line(data)
+  chartLine(data)
   context.lineWidth = 1.5
   context.strokeStyle = 'steelblue'
   context.stroke()
 }
+
+export default displayCanvas

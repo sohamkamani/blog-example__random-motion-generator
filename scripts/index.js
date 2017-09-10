@@ -1,30 +1,44 @@
-const genRandomLinesDegree = ({ degree, nPoints, max, min }) => {
-  const lines = [genRandomLine(nPoints, max, min)]
+import * as d3 from 'd3'
 
-  for (let i = 0; i < degree - 1; i++) {
+import {genRandomLinesDegree} from './gen-lines'
+import displayCanvas from './display-lines'
+import Fly from './display-fly'
 
-    lines.push(integralOf(lines[lines.length - 1], genRandomPoint(max, min)))
-  }
+const randomLinesX = genRandomLinesDegree({
+  degree: 4,
+  nPoints: 2000,
+  max: 5,
+  min: -5
+})
+const randomLinesY = genRandomLinesDegree({
+  degree: 4,
+  nPoints: 2000,
+  max: 5,
+  min: -5
+})
 
-  return lines
+displayCanvas('d0', randomLinesX[0])
+displayCanvas('d1', randomLinesX[1])
+displayCanvas('d2', randomLinesX[2])
+displayCanvas('d3', randomLinesX[3])
+
+const startFly = (dataX, dataY) => {
+  var flyX = d3
+    .scaleLinear()
+    .range([0, 200])
+    .domain(d3.extent(dataX, d => d * 1.5))
+
+  var flyY = d3
+    .scaleLinear()
+    .range([0, 200])
+    .domain(d3.extent(dataY, d => d * 1.5))
+
+  const flyPath = dataX.map((d, i) => ({
+    x: flyX(d),
+    y: flyY(dataY[i])
+  }))
+  const fly = new Fly(flyPath, 'd0f')
+  fly.animate()
 }
 
-const genRandomLine = (nPoints, max, min) => {
-  const points = []
-  for (let i = 0; i < nPoints; i += 1) {
-    points.push(genRandomPoint(max, min))
-  }
-  return points
-}
-
-const genRandomPoint = (max, min) => Math.random() * (max - min) + min
-
-const integralOf = (line, init) => {
-  let sum = init
-  const integral = []
-  for (let i = 0; i < line.length; i++) {
-    sum += line[i]
-    integral.push(sum)
-  }
-  return integral
-}
+startFly(randomLinesX[1], randomLinesY[1])
