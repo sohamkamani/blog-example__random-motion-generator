@@ -1,7 +1,7 @@
 import * as d3 from 'd3'
 
-import {genRandomLinesDegree} from './gen-lines'
-import displayCanvas from './display-lines'
+import { genRandomLinesDegree } from './gen-lines'
+import CanvasLineChart from './display-lines'
 import Fly from './display-fly'
 
 const randomLinesX = genRandomLinesDegree({
@@ -17,10 +17,16 @@ const randomLinesY = genRandomLinesDegree({
   min: -5
 })
 
-displayCanvas('d0', randomLinesX[0])
-displayCanvas('d1', randomLinesX[1])
-displayCanvas('d2', randomLinesX[2])
-displayCanvas('d3', randomLinesX[3])
+const cl0x = new CanvasLineChart('d0x', randomLinesX[0])
+const cl0y = new CanvasLineChart('d0y', randomLinesY[0])
+// const cl1 = new CanvasLineChart('d1', randomLinesX[1])
+// const cl2 = new CanvasLineChart('d2', randomLinesX[2])
+// const cl3 = new CanvasLineChart('d3', randomLinesX[3])
+
+// cl0x.drawChart()
+// cl1.drawChart()
+// cl2.drawChart()
+// cl3.drawChart()
 
 const startFly = (dataX, dataY) => {
   var flyX = d3
@@ -38,7 +44,19 @@ const startFly = (dataX, dataY) => {
     y: flyY(dataY[i])
   }))
   const fly = new Fly(flyPath, 'd0f')
-  fly.animate()
+  return fly
 }
 
-startFly(randomLinesX[1], randomLinesY[1])
+const fly = startFly(randomLinesX[0], randomLinesY[0])
+
+const animate = (fly, chartX, chartY) =>
+  requestAnimationFrame(() => {
+    if (fly.next() && chartX.next() && chartY.next()) {
+      fly.draw()
+      chartX.draw()
+      chartY.draw()
+      animate(fly, chartX, chartY)
+    }
+  })
+
+animate(fly, cl0x, cl0y)

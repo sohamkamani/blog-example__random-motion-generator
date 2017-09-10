@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
 
-function displayCanvas (canvasId, data) {
+function CanvasLineChart(canvasId, data) {
   var canvas = document.getElementById(canvasId)
   const context = canvas.getContext('2d')
 
@@ -13,12 +13,12 @@ function displayCanvas (canvasId, data) {
   const width = canvas.width - margin.left - margin.right
   const height = canvas.height - margin.top - margin.bottom
 
-  var x = d3
+  var scaleX = d3
     .scaleLinear()
     .range([0, width])
     .domain([0, data.length])
 
-  var y = d3
+  var scaleY = d3
     .scaleLinear()
     .range([height, 0])
     .domain(d3.extent(data, d => d * 1.3))
@@ -26,19 +26,58 @@ function displayCanvas (canvasId, data) {
   var chartLine = d3
     .line()
     .x((_, i) => {
-      return x(i)
+      return scaleX(i)
     })
-    .y(d => y(d))
+    .y(d => scaleY(d))
     .curve(d3.curveCatmullRom)
     .context(context)
 
   context.translate(margin.left, margin.top)
 
+  this.context = context
+  this.data = data
+  this.scaleX = scaleX
+  this.chartLine = chartLine
+  this.position = 0
+  this.height = height
+  this.width = width
+}
+
+CanvasLineChart.prototype.drawChart = function() {
+  const { context, data } = this
   context.beginPath()
-  chartLine(data)
+  this.chartLine(data)
   context.lineWidth = 1.5
   context.strokeStyle = 'steelblue'
   context.stroke()
 }
 
-export default displayCanvas
+CanvasLineChart.prototype.next = function() {
+  this.position += 1
+  if (this.position > this.data.length - 1) {
+    return false
+  }
+  return true
+}
+
+CanvasLineChart.prototype.drawRadar = function() {
+  const { context } = this
+  context.beginPath()
+  context.lineWidth = 1
+  context.strokeStyle = 'tomato'
+  const xPos = this.scaleX(this.position)
+  context.moveTo(xPos, 0)
+  context.lineTo(xPos, this.height)
+  context.stroke()
+}
+
+CanvasLineChart.prototype.draw = function() {
+  const { context, height, width } = this
+  context.beginPath()
+  context.fillStyle = 'white'
+  context.fillRect(0, 0, width, height)
+  this.drawChart()
+  this.drawRadar()
+}
+
+export default CanvasLineChart

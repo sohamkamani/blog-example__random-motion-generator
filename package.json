@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rollup -o script.js -f iife scripts/index.js"
+    "build": "rollup -c"
   },
   "author": "",
   "license": "ISC",

@@ -20,13 +20,15 @@ Fly.prototype.draw = function(){
 
 Fly.prototype.next = function(){
   this.position += 1
+  if(this.position >= this.journeyPoints.length -1){
+    return false
+  }
+  return true
 }
 
 Fly.prototype.animate = function(){
   requestAnimationFrame(()=>{
-    if(this.position >= this.journeyPoints.length -1){
-      return
-    }
+    
     this.next()
     this.draw()
     this.animate()
