@@ -1,5 +1,6 @@
 import npm from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
+import babel from 'rollup-plugin-babel'
 
 export default {
   input: 'scripts/index.js',
@@ -19,6 +20,9 @@ export default {
       // be transpiled by a previous plugin!)
       // include: 'node_modules/**',
       extensions: ['.js', '.coffee'] // defaults to [ '.js' ]
+    }),
+    babel({
+      exclude: 'node_modules/**'
     })
   ]
 }
