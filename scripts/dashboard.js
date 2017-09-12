@@ -25,6 +25,8 @@ const Dashboard = function({
       min: -5
     })
 
+    console.log(degree)
+
     const dataX = randomLinesX[randomLinesX.length - 1]
     const dataY = randomLinesY[randomLinesY.length - 1]
 
@@ -35,7 +37,7 @@ const Dashboard = function({
 
     var flyY = d3
       .scaleLinear()
-      .range([0, 200])
+      .range([200, 0])
       .domain(d3.extent(dataY, d => d * 1.5))
 
     const flyPath = dataX.map((d, i) => ({

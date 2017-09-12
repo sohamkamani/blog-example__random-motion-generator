@@ -5438,7 +5438,7 @@ const integralOf = (line, init) => {
   return integral
 };
 
-function CanvasLineChart (canvasId, data) {
+function CanvasLineChart(canvasId, data) {
   var canvas = document.getElementById(canvasId);
   const context = canvas.getContext('2d');
   context.restore();
@@ -5481,7 +5481,7 @@ function CanvasLineChart (canvasId, data) {
   this.width = width;
 }
 
-CanvasLineChart.prototype.drawChart = function () {
+CanvasLineChart.prototype.drawChart = function() {
   const { context, data } = this;
   context.beginPath();
   this.chartLine(data);
@@ -5490,7 +5490,7 @@ CanvasLineChart.prototype.drawChart = function () {
   context.stroke();
 };
 
-CanvasLineChart.prototype.next = function () {
+CanvasLineChart.prototype.next = function() {
   this.position += 1;
   if (this.position > this.data.length - 1) {
     return false
@@ -5498,7 +5498,7 @@ CanvasLineChart.prototype.next = function () {
   return true
 };
 
-CanvasLineChart.prototype.drawRadar = function () {
+CanvasLineChart.prototype.drawRadar = function() {
   const { context } = this;
   context.beginPath();
   context.lineWidth = 1;
@@ -5509,11 +5509,15 @@ CanvasLineChart.prototype.drawRadar = function () {
   context.stroke();
 };
 
-CanvasLineChart.prototype.draw = function () {
+CanvasLineChart.prototype.clear = function() {
   const { context, height, width } = this;
   context.beginPath();
   context.fillStyle = 'white';
-  context.fillRect(0, 0, width, height);
+  context.fillRect(-10, -10, width + 20, height + 20);
+};
+
+CanvasLineChart.prototype.draw = function() {
+  this.clear();
   this.drawChart();
   this.drawRadar();
 };
@@ -5576,6 +5580,8 @@ const Dashboard = function({
       min: -5
     });
 
+    console.log(degree);
+
     const dataX = randomLinesX[randomLinesX.length - 1];
     const dataY = randomLinesY[randomLinesY.length - 1];
 
@@ -5584,7 +5590,7 @@ const Dashboard = function({
       .domain(extent(dataX, d => d * 1.5));
 
     var flyY = linear$2()
-      .range([0, 200])
+      .range([200, 0])
       .domain(extent(dataY, d => d * 1.5));
 
     const flyPath = dataX.map((d, i) => ({
@@ -5630,80 +5636,69 @@ const Dashboard = function({
   }
 };
 
-const randomLinesX = genRandomLinesDegree({
-  degree: 4,
-  nPoints: 500,
-  max: 5,
-  min: -5
-});
-const randomLinesY = genRandomLinesDegree({
-  degree: 4,
-  nPoints: 500,
-  max: 5,
-  min: -5
-});
-
-const startFly = (dataX, dataY, canvasId) => {
-  var flyX = linear$2()
-    .range([0, 200])
-    .domain(extent(dataX, d => d * 1.5));
-
-  var flyY = linear$2()
-    .range([0, 200])
-    .domain(extent(dataY, d => d * 1.5));
-
-  const flyPath = dataX.map((d, i) => ({
-    x: flyX(d),
-    y: flyY(dataY[i])
-  }));
-  const fly = new Fly(flyPath, canvasId);
-  return fly
-};
-
-// const fly0 = startFly(randomLinesX[0], randomLinesY[0], 'd0f')
-// const cl0x = new CanvasLineChart('d0x', randomLinesX[0])
-// const cl0y = new CanvasLineChart('d0y', randomLinesY[0])
-
 const d0 = new Dashboard({
   chartXId: 'd0x',
   chartYId: 'd0y',
   flyId: 'd0f',
-  degree: 0,
+  degree: 1,
   regenButtonId: 'd0regen'
 });
 
-const fly1 = startFly(randomLinesX[1], randomLinesY[1], 'd1f');
-const cl1x = new CanvasLineChart('d1x', randomLinesX[1]);
-const cl1y = new CanvasLineChart('d1y', randomLinesY[1]);
+d0.animate();
 
-const fly2 = startFly(randomLinesX[2], randomLinesY[2], 'd2f');
-const cl2x = new CanvasLineChart('d2x', randomLinesX[2]);
-const cl2y = new CanvasLineChart('d2y', randomLinesY[2]);
+const d1 = new Dashboard({
+  chartXId: 'd1x',
+  chartYId: 'd1y',
+  flyId: 'd1f',
+  degree: 2,
+  regenButtonId: 'd1regen'
+});
 
-const fly3 = startFly(randomLinesX[3], randomLinesY[3], 'd3f');
-const cl3x = new CanvasLineChart('d3x', randomLinesX[3]);
-const cl3y = new CanvasLineChart('d3y', randomLinesY[3]);
+d1.animate();
 
-const animate = (fly, chartX, chartY) =>
-  requestAnimationFrame(() => {
-    if (fly.next() && chartX.next() && chartY.next()) {
-      fly.draw();
-      chartX.draw();
-      chartY.draw();
-      animate(fly, chartX, chartY);
-    }
+const d2 = new Dashboard({
+  chartXId: 'd2x',
+  chartYId: 'd2y',
+  flyId: 'd2f',
+  degree: 3,
+  regenButtonId: 'd2regen'
+});
+
+d2.animate();
+
+var copyCanvas = function(src, dst){
+  var sourceCanvas = document.getElementById(src);
+  var destinationCanvas = document.getElementById(dst);
+  var destCtx = destinationCanvas.getContext('2d');
+  destCtx.drawImage(sourceCanvas, 0, 0);
+};
+
+const drawSampleCharts = () => {
+  const randomLines = genRandomLinesDegree({
+    degree: 3,
+    nPoints: 200,
+    max: 5,
+    min: -5
   });
 
-// animate(fly0, cl0x, cl0y)
-d0.animate();
-animate(fly1, cl1x, cl1y);
-animate(fly2, cl2x, cl2y);
-animate(fly3, cl3x, cl3y);
+  const chart1 = new CanvasLineChart('sample0', randomLines[0]);
+  const chart2 = new CanvasLineChart('sample1', randomLines[1]);
+  const chart3 = new CanvasLineChart('sample2', randomLines[2]);
+  chart1.clear();
+  chart2.clear();
+  chart3.clear();
+  chart1.drawChart();
+  chart2.drawChart();
+  chart3.drawChart();
+  copyCanvas('sample0', 'sample0c');
+  copyCanvas('sample1', 'sample1c');
+  copyCanvas('sample2', 'sample2c');
+};
 
-// const regen = document.getElementById('d0regen')
-// regen.addEventListener('click', () => {
-//   d0.generate()
-// })
+drawSampleCharts();
+document.getElementById('c-regen-sample').addEventListener('click', () => {
+  drawSampleCharts();
+});
 
 }());
 //# sourceMappingURL=bundle.js.map

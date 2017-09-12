@@ -1,83 +1,67 @@
-import * as d3 from 'd3'
-
-import { genRandomLinesDegree } from './gen-lines'
-import CanvasLineChart from './display-lines'
-import Fly from './display-fly'
 import Dashboard from './dashboard'
-
-const randomLinesX = genRandomLinesDegree({
-  degree: 4,
-  nPoints: 500,
-  max: 5,
-  min: -5
-})
-const randomLinesY = genRandomLinesDegree({
-  degree: 4,
-  nPoints: 500,
-  max: 5,
-  min: -5
-})
-
-const startFly = (dataX, dataY, canvasId) => {
-  var flyX = d3
-    .scaleLinear()
-    .range([0, 200])
-    .domain(d3.extent(dataX, d => d * 1.5))
-
-  var flyY = d3
-    .scaleLinear()
-    .range([0, 200])
-    .domain(d3.extent(dataY, d => d * 1.5))
-
-  const flyPath = dataX.map((d, i) => ({
-    x: flyX(d),
-    y: flyY(dataY[i])
-  }))
-  const fly = new Fly(flyPath, canvasId)
-  return fly
-}
-
-// const fly0 = startFly(randomLinesX[0], randomLinesY[0], 'd0f')
-// const cl0x = new CanvasLineChart('d0x', randomLinesX[0])
-// const cl0y = new CanvasLineChart('d0y', randomLinesY[0])
+import CanvasLineChart from './display-lines'
+import { genRandomLinesDegree } from './gen-lines'
 
 const d0 = new Dashboard({
   chartXId: 'd0x',
   chartYId: 'd0y',
   flyId: 'd0f',
-  degree: 0,
+  degree: 1,
   regenButtonId: 'd0regen'
 })
 
-const fly1 = startFly(randomLinesX[1], randomLinesY[1], 'd1f')
-const cl1x = new CanvasLineChart('d1x', randomLinesX[1])
-const cl1y = new CanvasLineChart('d1y', randomLinesY[1])
+d0.animate()
 
-const fly2 = startFly(randomLinesX[2], randomLinesY[2], 'd2f')
-const cl2x = new CanvasLineChart('d2x', randomLinesX[2])
-const cl2y = new CanvasLineChart('d2y', randomLinesY[2])
+const d1 = new Dashboard({
+  chartXId: 'd1x',
+  chartYId: 'd1y',
+  flyId: 'd1f',
+  degree: 2,
+  regenButtonId: 'd1regen'
+})
 
-const fly3 = startFly(randomLinesX[3], randomLinesY[3], 'd3f')
-const cl3x = new CanvasLineChart('d3x', randomLinesX[3])
-const cl3y = new CanvasLineChart('d3y', randomLinesY[3])
+d1.animate()
 
-const animate = (fly, chartX, chartY) =>
-  requestAnimationFrame(() => {
-    if (fly.next() && chartX.next() && chartY.next()) {
-      fly.draw()
-      chartX.draw()
-      chartY.draw()
-      animate(fly, chartX, chartY)
-    }
+const d2 = new Dashboard({
+  chartXId: 'd2x',
+  chartYId: 'd2y',
+  flyId: 'd2f',
+  degree: 3,
+  regenButtonId: 'd2regen'
+})
+
+d2.animate()
+
+var copyCanvas = function(src, dst){
+  var sourceCanvas = document.getElementById(src)
+  var destinationCanvas = document.getElementById(dst)
+  var destCtx = destinationCanvas.getContext('2d')
+  destCtx.drawImage(sourceCanvas, 0, 0)
+}
+
+const drawSampleCharts = () => {
+  const randomLines = genRandomLinesDegree({
+    degree: 3,
+    nPoints: 200,
+    max: 5,
+    min: -5
   })
 
-// animate(fly0, cl0x, cl0y)
-d0.animate()
-animate(fly1, cl1x, cl1y)
-animate(fly2, cl2x, cl2y)
-animate(fly3, cl3x, cl3y)
+  const chart1 = new CanvasLineChart('sample0', randomLines[0])
+  const chart2 = new CanvasLineChart('sample1', randomLines[1])
+  const chart3 = new CanvasLineChart('sample2', randomLines[2])
+  chart1.clear()
+  chart2.clear()
+  chart3.clear()
+  chart1.drawChart()
+  chart2.drawChart()
+  chart3.drawChart()
+  copyCanvas('sample0', 'sample0c')
+  copyCanvas('sample1', 'sample1c')
+  copyCanvas('sample2', 'sample2c')
+}
 
-// const regen = document.getElementById('d0regen')
-// regen.addEventListener('click', () => {
-//   d0.generate()
-// })
+drawSampleCharts()
+document.getElementById('c-regen-sample').addEventListener('click', () => {
+  drawSampleCharts()
+})
