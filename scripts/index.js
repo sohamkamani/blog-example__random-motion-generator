@@ -45,7 +45,8 @@ const d0 = new Dashboard({
   chartXId: 'd0x',
   chartYId: 'd0y',
   flyId: 'd0f',
-  degree: 0
+  degree: 0,
+  regenButtonId: 'd0regen'
 })
 
 const fly1 = startFly(randomLinesX[1], randomLinesY[1], 'd1f')
@@ -76,7 +77,7 @@ animate(fly1, cl1x, cl1y)
 animate(fly2, cl2x, cl2y)
 animate(fly3, cl3x, cl3y)
 
-const regen = document.getElementById('d0regen')
-regen.addEventListener('click', () => {
-  d0.generate()
-})
+// const regen = document.getElementById('d0regen')
+// regen.addEventListener('click', () => {
+//   d0.generate()
+// })

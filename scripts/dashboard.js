@@ -66,6 +66,15 @@ const Dashboard = function({
       }
     })
 
+    const regen = document.getElementById(regenButtonId)
+    regen.addEventListener('click', () => {
+      const newEntities = generate()
+      fly = newEntities.fly
+      chartX = newEntities.chartX
+      chartY = newEntities.chartY
+      animate()
+    })
+
   return {
     animate,
     generate

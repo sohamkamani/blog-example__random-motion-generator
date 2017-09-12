@@ -5438,7 +5438,7 @@ const integralOf = (line, init) => {
   return integral
 };
 
-function CanvasLineChart(canvasId, data) {
+function CanvasLineChart (canvasId, data) {
   var canvas = document.getElementById(canvasId);
   const context = canvas.getContext('2d');
   context.restore();
@@ -5481,7 +5481,7 @@ function CanvasLineChart(canvasId, data) {
   this.width = width;
 }
 
-CanvasLineChart.prototype.drawChart = function() {
+CanvasLineChart.prototype.drawChart = function () {
   const { context, data } = this;
   context.beginPath();
   this.chartLine(data);
@@ -5490,7 +5490,7 @@ CanvasLineChart.prototype.drawChart = function() {
   context.stroke();
 };
 
-CanvasLineChart.prototype.next = function() {
+CanvasLineChart.prototype.next = function () {
   this.position += 1;
   if (this.position > this.data.length - 1) {
     return false
@@ -5498,7 +5498,7 @@ CanvasLineChart.prototype.next = function() {
   return true
 };
 
-CanvasLineChart.prototype.drawRadar = function() {
+CanvasLineChart.prototype.drawRadar = function () {
   const { context } = this;
   context.beginPath();
   context.lineWidth = 1;
@@ -5509,7 +5509,7 @@ CanvasLineChart.prototype.drawRadar = function() {
   context.stroke();
 };
 
-CanvasLineChart.prototype.draw = function() {
+CanvasLineChart.prototype.draw = function () {
   const { context, height, width } = this;
   context.beginPath();
   context.fillStyle = 'white';
@@ -5615,6 +5615,15 @@ const Dashboard = function({
       }
     });
 
+    const regen = document.getElementById(regenButtonId);
+    regen.addEventListener('click', () => {
+      const newEntities = generate();
+      fly = newEntities.fly;
+      chartX = newEntities.chartX;
+      chartY = newEntities.chartY;
+      animate();
+    });
+
   return {
     animate,
     generate
@@ -5659,7 +5668,8 @@ const d0 = new Dashboard({
   chartXId: 'd0x',
   chartYId: 'd0y',
   flyId: 'd0f',
-  degree: 0
+  degree: 0,
+  regenButtonId: 'd0regen'
 });
 
 const fly1 = startFly(randomLinesX[1], randomLinesY[1], 'd1f');
@@ -5690,10 +5700,10 @@ animate(fly1, cl1x, cl1y);
 animate(fly2, cl2x, cl2y);
 animate(fly3, cl3x, cl3y);
 
-const regen = document.getElementById('d0regen');
-regen.addEventListener('click', () => {
-  d0.generate();
-});
+// const regen = document.getElementById('d0regen')
+// regen.addEventListener('click', () => {
+//   d0.generate()
+// })
 
 }());
 //# sourceMappingURL=bundle.js.map

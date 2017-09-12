@@ -1,6 +1,6 @@
 import * as d3 from 'd3'
 
-function CanvasLineChart(canvasId, data) {
+function CanvasLineChart (canvasId, data) {
   var canvas = document.getElementById(canvasId)
   const context = canvas.getContext('2d')
   context.restore()
@@ -46,7 +46,7 @@ function CanvasLineChart(canvasId, data) {
   this.width = width
 }
 
-CanvasLineChart.prototype.drawChart = function() {
+CanvasLineChart.prototype.drawChart = function () {
   const { context, data } = this
   context.beginPath()
   this.chartLine(data)
@@ -55,7 +55,7 @@ CanvasLineChart.prototype.drawChart = function() {
   context.stroke()
 }
 
-CanvasLineChart.prototype.next = function() {
+CanvasLineChart.prototype.next = function () {
   this.position += 1
   if (this.position > this.data.length - 1) {
     return false
@@ -63,7 +63,7 @@ CanvasLineChart.prototype.next = function() {
   return true
 }
 
-CanvasLineChart.prototype.drawRadar = function() {
+CanvasLineChart.prototype.drawRadar = function () {
   const { context } = this
   context.beginPath()
   context.lineWidth = 1
@@ -74,7 +74,7 @@ CanvasLineChart.prototype.drawRadar = function() {
   context.stroke()
 }
 
-CanvasLineChart.prototype.draw = function() {
+CanvasLineChart.prototype.draw = function () {
   const { context, height, width } = this
   context.beginPath()
   context.fillStyle = 'white'
